@@ -8,9 +8,9 @@ license-files = ["LICENSE"]
 requires-python = ">=3.12"
 
 dependencies = [
-  "pgrubic==2.1.0",
+  "pgrubic==3.0.0",
   "toml==0.10.2",
-  "pydantic==2.13.4",
+  "pydantic==2.13.5",
   "pydantic-settings==2.15.0",
   "uvicorn==0.52.4",
   "fastapi==0.141.1",
@@ -117,6 +117,8 @@ legacy_tox_ini = """
     min_version = 4.0
     env_list =
         isort
+        lock
+        lock-update
         lint
         format
         format
@@ -173,6 +175,10 @@ legacy_tox_ini = """
     # A stale uv.lock (e.g. after editing dependencies) would otherwise fail
     # env creation itself under the default lock-runner, before this env's
     # own command (which regenerates the lock) ever gets to run.
+    runner = uv-venv-runner
+    commands = uv lock --check
+
+    [testenv:lock-update]
     runner = uv-venv-runner
     commands = uv lock
 

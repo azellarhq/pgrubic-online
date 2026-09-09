@@ -23,6 +23,7 @@ jobs:
       matrix:
         job:
           - lint
+          - lock
           - docstrings-coverage
           - isort
           - format
