@@ -14,18 +14,18 @@
   },
   "dependencies": {
     "monaco-editor": "0.52.2",
-    "toml": "3.0.0",
+    "toml": "4.2.0",
     "vite-plugin-monaco-editor-esm": "2.0.2"
   },
   "devDependencies": {
     "@eslint/js": "9.32.0",
-    "@vitest/coverage-v8": "4.1.9",
+    "@vitest/coverage-v8": "4.1.11",
     "eslint": "9.32.0",
     "globals": "16.3.0",
     "jsdom": "26.1.0",
     "prettier": "3.6.2",
     "vite": "7.3.5",
     "vite-plugin-monaco-editor": "1.1.0",
-    "vitest": "4.1.9"
+    "vitest": "4.1.11"
   }
 }
