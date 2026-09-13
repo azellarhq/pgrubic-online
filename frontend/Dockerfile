@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:26-slim@sha256:c0753125a3789977aefe869cbebccf70e3cfd7ea84ca48547458f02e4f1d7146 AS build
+FROM node:26-slim@sha256:14bf3eac4bf209d906d3c41256597d3ab1f926b2e93a79e9bdfe1efd32454239 AS build
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN npm ci
 RUN npm run build
 
 # Stage 2: Runtime
-FROM nginxinc/nginx-unprivileged:alpine@sha256:aa8c9087d36d93e9d650c5365f883b421e8214aedbad24ade52b844c583358f1
+FROM nginxinc/nginx-unprivileged:alpine@sha256:2ddec616f1cb58bcac057aa388f28cb81e35137641ef4226d321714499329bd1
 
 COPY config/nginx/default.conf.template  /etc/nginx/templates/default.conf.template
 
