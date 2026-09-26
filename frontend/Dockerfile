@@ -16,7 +16,7 @@ RUN npm ci
 RUN npm run build
 
 # Stage 2: Runtime
-FROM nginxinc/nginx-unprivileged:alpine@sha256:2ddec616f1cb58bcac057aa388f28cb81e35137641ef4226d321714499329bd1
+FROM nginxinc/nginx-unprivileged:alpine@sha256:b54ac358b83fc6c965793fd271839b4ea4cdb6e99895bb19618cbc2ca152d972
 
 COPY config/nginx/default.conf.template  /etc/nginx/templates/default.conf.template
 
