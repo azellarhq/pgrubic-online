@@ -9,6 +9,10 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - main
 
+env:
+  PYTHON_VERSION: 3.12
+  UV_VERSION: 0.13.4
+
 permissions:
   contents: read
 
@@ -33,9 +37,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Install backend dependencies
-        working-directory: backend
-        run: pip install --no-cache-dir --upgrade pip tox tox-uv-bare
+      - name: Set up uv and Python for backend
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          version: ${{ env.UV_VERSION }}
 
       - name: Run pre-commit
         working-directory: backend
