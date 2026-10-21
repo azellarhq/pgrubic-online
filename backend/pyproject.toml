@@ -186,5 +186,6 @@ legacy_tox_ini = """
     commands = bandit --severity-level all -r app
 
     [testenv:pre-commit]
+    runner = uv-venv-runner
     commands = pre-commit {posargs:run --hook-stage pre-commit --all-files}
 """
