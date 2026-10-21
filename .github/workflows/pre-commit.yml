@@ -44,7 +44,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: Install tox
-        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.36.0
+        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
 
       - name: Run pre-commit
         working-directory: backend
