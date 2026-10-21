@@ -13,6 +13,10 @@ defaults:
   run:
     working-directory: backend
 
+env:
+  PYTHON_VERSION: 3.12
+  UV_VERSION: 0.13.4
+
 jobs:
   lint:
     permissions:
@@ -35,13 +39,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
+          version: ${{ env.UV_VERSION }}
 
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox tox-uv
+      - name: Install tox
+        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
 
       - name: Run ${{ matrix.job }}
         run: tox -e ${{ matrix.job }}
@@ -60,13 +65,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
+          version: ${{ env.UV_VERSION }}
 
-      - name: Install dependencies
-        run: pip install --no-cache-dir --upgrade pip tox tox-uv
+      - name: Install tox
+        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
 
       - name: Run coverage
         run: tox -e coverage
