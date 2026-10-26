@@ -1,0 +1,148 @@
+---
+# yamllint disable rule:line-length
+name: Trivy Security Scan
+
+on:  # yamllint disable-line rule:truthy
+  workflow_call:
+    inputs:
+      release-images:
+        description: Retain scanned images for publication
+        type: boolean
+        default: false
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
+jobs:
+  trivy-repo-scan:
+    name: Trivy Repository Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - name: Scan repository vulnerabilities and secrets with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
+        with:
+          version: v0.76.1
+          trivy-config: trivy.yaml
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret
+          vuln-type: os,library
+          format: sarif
+          output: trivy-repo-results.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: "false"
+          limit-severities-for-sarif: "true"
+          exit-code: "1"
+          trivyignores: .trivyignore.yaml
+
+      - name: Upload repository findings to Code Scanning
+        if: always() && hashFiles('trivy-repo-results.sarif') != ''
+        # Retain the report below when Code Scanning is unavailable.
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370  # v4
+        with:
+          sarif_file: trivy-repo-results.sarif
+          category: trivy-repo
+
+      - name: Retain repository SARIF report
+        if: always() && hashFiles('trivy-repo-results.sarif') != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
+        with:
+          name: trivy-repo-results
+          path: trivy-repo-results.sarif
+          retention-days: 14
+
+  trivy-image-scan:
+    name: Trivy ${{ matrix.component }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [backend, frontend]
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069  # v4
+
+      - name: Build ${{ matrix.component }} image for scanning
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc  # v7
+        with:
+          context: ./${{ matrix.component }}
+          file: ${{ matrix.component }}/Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          push: false
+          load: true
+          tags: pgrubic-online-${{ matrix.component }}:scan-${{ matrix.arch }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.licenses=MIT
+          cache-from: type=gha,scope=${{ matrix.component }}-${{ matrix.arch }}
+          cache-to: type=gha,scope=${{ matrix.component }}-${{ matrix.arch }},mode=max
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
+        with:
+          version: v0.76.1
+          trivy-config: trivy.yaml
+          image-ref: pgrubic-online-${{ matrix.component }}:scan-${{ matrix.arch }}
+          scanners: vuln,secret
+          vuln-type: os,library
+          format: sarif
+          output: trivy-${{ matrix.component }}-${{ matrix.arch }}-results.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: "false"
+          limit-severities-for-sarif: "true"
+          exit-code: "1"
+          trivyignores: .trivyignore.yaml
+
+      - name: Upload image findings to Code Scanning
+        if: always() && hashFiles(format('trivy-{0}-{1}-results.sarif', matrix.component, matrix.arch)) != ''
+        # Retain the report below when Code Scanning is unavailable.
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370  # v4
+        with:
+          sarif_file: trivy-${{ matrix.component }}-${{ matrix.arch }}-results.sarif
+          category: trivy-${{ matrix.component }}-${{ matrix.arch }}
+
+      - name: Retain image SARIF report
+        if: always() && hashFiles(format('trivy-{0}-{1}-results.sarif', matrix.component, matrix.arch)) != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
+        with:
+          name: trivy-${{ matrix.component }}-${{ matrix.arch }}-results
+          path: trivy-${{ matrix.component }}-${{ matrix.arch }}-results.sarif
+          retention-days: 14
+
+      - name: Export scanned image for release
+        if: inputs.release-images
+        env:
+          IMAGE: pgrubic-online-${{ matrix.component }}:scan-${{ matrix.arch }}
+        run: docker save "$IMAGE" -o image.tar
+
+      - name: Retain scanned image for release
+        if: inputs.release-images
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
+        with:
+          name: image-${{ matrix.component }}-${{ matrix.arch }}
+          path: image.tar
+          retention-days: 1
