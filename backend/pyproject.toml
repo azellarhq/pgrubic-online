@@ -8,18 +8,18 @@ license-files = ["LICENSE"]
 requires-python = ">=3.12"
 
 dependencies = [
-  "pgrubic==4.0.1",
+  "pgrubic==4.1.0",
   "toml==0.10.2",
-  "pydantic==2.13.5",
+  "pydantic==2.14.1",
   "pydantic-settings==2.16.1",
   "uvicorn==0.54.0",
-  "fastapi==0.159.1",
+  "fastapi==0.162.0",
   "diskcache==5.6.3"
 ]
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.17.1",
+  "ruff==0.17.2",
   "mypy==2.4.0",
   "isort==9.0.2",
   "bandit==1.9.4",
@@ -30,7 +30,7 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.4.0",
   "pytest==9.1.1",
-  "coverage==7.16.2",
+  "coverage==7.17.0",
   "tox==4.67.1",
   "httpx2==2.16.0",
   "types-toml==0.10.8.20260518",
