@@ -1,12 +1,16 @@
 ---
-# Shared local/CI policy. Include unfixed vulnerabilities in the release gate.
+format: "sarif"
+output: "trivy-repo-results.sarif"
 severity:
   - HIGH
   - CRITICAL
 exit-code: 1
-ignorefile: .trivyignore.yaml
+ignorefile: .trivyignore
 pkg:
   include-dev-deps: true
+  types:
+    - os
+    - library
 scan:
   scanners:
     - vuln
@@ -17,7 +21,6 @@ scan:
     - .tox
     - node_modules
     - dist
-    - coverage
     - .cache
 vulnerability:
   ignore-unfixed: false
