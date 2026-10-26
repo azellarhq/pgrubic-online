@@ -1,0 +1,54 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard",
+    ":maintainLockFilesWeekly"
+  ],
+  // "description": "Schedule dependency updates weekly on Saturday",
+  // "schedule": ["on saturday"],
+  "lockFileMaintenance": {
+    "enabled": true
+    // "schedule": ["on saturday"]
+  },
+  // Remove PR creation limits
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "branchConcurrentLimit": 0,
+  "packageRules": [
+    {
+      "description": "Group docker dependencies",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchFileNames": [
+        "Dockerfile"
+      ],
+      "groupName": "docker updates",
+      "groupSlug": "docker-updates"
+    },
+    {
+      "description": "Group python dependencies",
+      "matchManagers": [
+        "pep621"
+      ],
+      "groupName": "python updates",
+      "groupSlug": "python-updates"
+    },
+    {
+      "description": "Group dependencies declared in GitHub Actions workflows",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions updates",
+      "groupSlug": "github-actions-updates",
+      "pinDigests": true
+    },
+    {
+      "description": "Disable digest pinning for GitHub Actions uses-with dependencies",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["uses-with"],
+      "pinDigests": false
+    }
+  ]
+}
