@@ -28,12 +28,19 @@
       "groupSlug": "docker-updates"
     },
     {
-      "description": "Group python dependencies",
+      "description": "Group backend dependencies",
       "matchManagers": [
         "pep621"
       ],
-      "groupName": "python updates",
-      "groupSlug": "python-updates"
+      "groupName": "backend updates",
+      "groupSlug": "backend-updates"
+    },
+    {
+      "description": "Group frontend dependencies",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/package.json"],
+      "groupName": "frontend updates",
+      "groupSlug": "frontend-updates"
     },
     {
       "description": "Group dependencies declared in GitHub Actions workflows",
