@@ -1,0 +1,23 @@
+---
+# Shared local/CI policy. Include unfixed vulnerabilities in the release gate.
+severity:
+  - HIGH
+  - CRITICAL
+exit-code: 1
+ignorefile: .trivyignore.yaml
+pkg:
+  include-dev-deps: true
+scan:
+  scanners:
+    - vuln
+    - secret
+  skip-dirs:
+    - .git
+    - .venv
+    - .tox
+    - node_modules
+    - dist
+    - coverage
+    - .cache
+vulnerability:
+  ignore-unfixed: false
