@@ -1,7 +1,12 @@
-# Stage 1: Build
-FROM node:26-slim@sha256:36793bcbb160a6a16cede1e62b93f84e26b78a972a8a4c0b879c1c12f22761ec AS build
+FROM node:26.12-alpine@sha256:40cd011b55415bc894e45b02fdd5a5dfde056921b7d23a64c74f80497af48797 AS builder
 
 WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+# Cache runtime dependencies separately from application source changes.
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
 COPY src src
 
@@ -9,20 +14,17 @@ COPY public public
 
 COPY css css
 
-COPY index.html package.json package-lock.json vite.config.js ./
-
-RUN npm ci
+COPY index.html vite.config.js ./
 
 RUN npm run build
 
-# Stage 2: Runtime
-FROM nginxinc/nginx-unprivileged:alpine@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e
+FROM nginx/nginx-unprivileged:stable-alpine@sha256:2daef144b574804198caccc4041819fa1801ecd5df2252a39646bfa2b1ff3bea AS runtime
 
 COPY config/nginx/default.conf.template  /etc/nginx/templates/default.conf.template
 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 8080
 
 # Switch to non-root user.
 USER 10001
