@@ -5,11 +5,11 @@
     ":disableDependencyDashboard",
     ":maintainLockFilesWeekly"
   ],
-  // "description": "Schedule dependency updates weekly on Saturday",
-  // "schedule": ["on saturday"],
+  "description": "Schedule dependency updates weekly on Saturday",
+  "schedule": ["on saturday"],
   "lockFileMaintenance": {
-    "enabled": true
-    // "schedule": ["on saturday"]
+    "enabled": true,
+    "schedule": ["on saturday"]
   },
   // Remove PR creation limits
   "prHourlyLimit": 0,
