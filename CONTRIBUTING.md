@@ -47,7 +47,6 @@ Run the API locally:
 
 ```bash
 python app/main.py
-# http://localhost:8000, auto-reload in dev
 ```
 
 ## Frontend setup
@@ -85,11 +84,9 @@ From `backend/`, install hooks for both backend and frontend:
 pre-commit install
 ```
 
-After installing frontend dependencies, run all hooks from `backend/`:
-
-```bash
-tox -e pre-commit
-```
+This runs formatting, linting, type checking, commit-message validation etc on every
+commit. CI runs the same checks (`.github/workflows/pre-commit.yml`), so a clean
+`pre-commit run --all-files` locally means CI's pre-commit job will pass too.
 
 ## Commit messages
 
@@ -100,8 +97,6 @@ commit-msg hook above.
 ## Submitting a change
 
 1. Branch off `main`.
-2. Make your change, keeping backend and frontend changes in separate commits/PRs
+2. Make your change, keeping backend and frontend changes in separate PRs
    where practical.
-3. Run the backend checks above, `npm run lint && npm run coverage` from `frontend/`,
-   and `tox -e pre-commit` from `backend/`.
-4. Open a PR against `main`. CI must pass before merge.
+3. Open a PR against `main`. CI must pass before merge.
