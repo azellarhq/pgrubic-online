@@ -41,7 +41,7 @@ Common commands:
 | `tox -e security` | `bandit` |
 | `tox -e docstrings-coverage` | `interrogate` (100% required) |
 | `tox -e lock` | Check that `uv.lock` matches the project configuration |
-| `lock-update` | Update `uv.lock` after changing dependencies |
+| `tox -e lock-update` | Update `uv.lock` after changing dependencies |
 
 Run the API locally:
 
