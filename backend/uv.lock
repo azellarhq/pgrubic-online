@@ -913,11 +913,15 @@ dev = [
     { name = "pre-commit-hooks" },
     { name = "pytest" },
     { name = "ruff" },
+    { name = "types-toml" },
+    { name = "yamllint" },
+]
+
+[package.dev-dependencies]
+tooling = [
     { name = "tox" },
     { name = "tox-uv-bare" },
-    { name = "types-toml" },
     { name = "uv" },
-    { name = "yamllint" },
 ]
 
 [package.metadata]
@@ -940,14 +944,18 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = "==9.1.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = "==0.17.2" },
     { name = "toml", specifier = "==0.10.2" },
-    { name = "tox", marker = "extra == 'dev'", specifier = "==4.67.1" },
-    { name = "tox-uv-bare", marker = "extra == 'dev'", specifier = "==1.37.0" },
     { name = "types-toml", marker = "extra == 'dev'", specifier = "==0.10.8.20260518" },
-    { name = "uv", marker = "extra == 'dev'", specifier = "==0.13.5" },
     { name = "uvicorn", specifier = "==0.54.0" },
     { name = "yamllint", marker = "extra == 'dev'", specifier = "==1.38.0" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+tooling = [
+    { name = "tox", specifier = "==4.67.1" },
+    { name = "tox-uv-bare", specifier = "==1.37.0" },
+    { name = "uv", specifier = "==0.13.5" },
+]
 
 [[package]]
 name = "platformdirs"

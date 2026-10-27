@@ -11,7 +11,7 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   PYTHON_VERSION: 3.12
-  UV_VERSION: 0.13.4
+  UV_VERSION: 0.13.5
 
 permissions:
   contents: read
@@ -22,11 +22,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
-
-      - name: Set up Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7
-        with:
-          python-version: "3.12"
 
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7
@@ -43,9 +38,6 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           version: ${{ env.UV_VERSION }}
 
-      - name: Install tox
-        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
-
       - name: Run pre-commit
         working-directory: backend
-        run: tox -e pre-commit
+        run: uv run --locked --only-group tooling tox -e pre-commit

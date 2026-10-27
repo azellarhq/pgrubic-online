@@ -15,7 +15,7 @@ defaults:
 
 env:
   PYTHON_VERSION: 3.12
-  UV_VERSION: 0.13.4
+  UV_VERSION: 0.13.5
 
 jobs:
   lint:
@@ -45,11 +45,8 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           version: ${{ env.UV_VERSION }}
 
-      - name: Install tox
-        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
-
       - name: Run ${{ matrix.job }}
-        run: tox -e ${{ matrix.job }}
+        run: uv run --locked --only-group tooling tox -e ${{ matrix.job }}
 
   coverage:
     runs-on: ubuntu-latest
@@ -71,11 +68,8 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           version: ${{ env.UV_VERSION }}
 
-      - name: Install tox
-        run: uv tool install tox==4.67.0 --with tox-uv-bare==1.37.0
-
       - name: Run coverage
-        run: tox -e coverage
+        run: uv run --locked --only-group tooling tox -e coverage
 
       - name: Coverage comment
         id: coverage_comment
