@@ -6,7 +6,7 @@ you need to get set up and send a change.
 ## Project layout
 
 - `backend/`: FastAPI service (Python 3.12) that lints/formats SQL via `pgrubic` and
-  serves share links.
+  serves sharable links.
 - `frontend/`: Vite + vanilla JS UI (Monaco editor) that talks to the backend.
 
 Each has its own tooling and CI workflow; changes to one rarely require touching the
@@ -14,23 +14,21 @@ other.
 
 ## Prerequisites
 
-- Python 3.12+ and [`tox`](https://tox.wiki) with the [`tox-uv`](https://github.com/tox-dev/tox-uv)
-  plugin (`pip install tox tox-uv`), which makes tox resolve and install dependencies
-  from `uv.lock` for reproducible environments
+- Python 3.12+ and [`uv`](https://docs.astral.sh/uv/getting-started/installation/)
 - Node 24+
-- Docker, only if you want to run the full stack together
+- Docker
 
 ## Backend setup
 
 ```bash
 cd backend
-tox -e dev --devenv .venv
+uv sync --locked --group tooling --extra dev
 
 # activate the virtual environment
 source .venv/bin/activate
 ```
 
-Common commands (all wired through `tox`, matching CI):
+Common commands:
 
 | Command | What it does |
 | --- | --- |
@@ -42,13 +40,13 @@ Common commands (all wired through `tox`, matching CI):
 | `tox -e isort` | Import sort check |
 | `tox -e security` | `bandit` |
 | `tox -e docstrings-coverage` | `interrogate` (100% required) |
-| `tox -e lock` | Regenerate `uv.lock` after changing dependencies |
+| `tox -e lock` | Check that `uv.lock` matches the project configuration |
+| `tox -e lock-update` | Update `uv.lock` after changing dependencies |
 
 Run the API locally:
 
 ```bash
-cd backend
-python app/main.py  # http://localhost:8000, auto-reload in dev
+python app/main.py
 ```
 
 ## Frontend setup
@@ -80,14 +78,13 @@ Frontend on `http://localhost`, backend on `http://localhost:8000`.
 
 ## Pre-commit
 
-Install once, applies to both backend and frontend:
+From `backend/`, install hooks for both backend and frontend:
 
 ```bash
-pip install pre-commit
 pre-commit install
 ```
 
-This runs formatting, linting, type checking, and commit-message validation on every
+This runs formatting, linting, type checking, commit-message validation etc on every
 commit. CI runs the same checks (`.github/workflows/pre-commit.yml`), so a clean
 `pre-commit run --all-files` locally means CI's pre-commit job will pass too.
 
@@ -100,8 +97,6 @@ commit-msg hook above.
 ## Submitting a change
 
 1. Branch off `main`.
-2. Make your change, keeping backend and frontend changes in separate commits/PRs
+2. Make your change, keeping backend and frontend changes in separate PRs
    where practical.
-3. Ensure `tox` (backend) / `npm run lint && npm run coverage` (frontend) and
-   `pre-commit run --all-files` pass locally.
-4. Open a PR against `main`. CI must pass before merge.
+3. Open a PR against `main`. CI must pass before merge.
