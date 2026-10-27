@@ -1,0 +1,26 @@
+# Only send files required to build and serve the frontend.
+**
+!Dockerfile
+!.dockerignore
+!package.json
+!package-lock.json
+!index.html
+!vite.config.js
+!src/
+!src/**
+!public/
+!public/**
+!css/
+!css/**
+!config/
+!config/nginx/
+!config/nginx/default.conf.template
+
+# Exclude local artifacts and secrets inside source directories as well.
+**/node_modules
+**/dist
+**/coverage
+**/.cache
+**/.git
+**/.env
+**/.env.*

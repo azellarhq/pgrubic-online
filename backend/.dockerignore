@@ -1,0 +1,24 @@
+# Only send files required to build the backend.
+**
+!Dockerfile
+!.dockerignore
+!pyproject.toml
+!uv.lock
+!app/
+!app/**
+
+# Exclude local artifacts and secrets inside app as well.
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/.git
+**/.venv
+**/.tox
+**/.env
+**/.env.*
+**/.cache
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.coverage*
+**/coverage.xml
