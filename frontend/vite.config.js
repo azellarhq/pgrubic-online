@@ -1,5 +1,4 @@
 import { defineConfig, loadEnv } from "vite";
-import monacoEditorPlugin from "vite-plugin-monaco-editor-esm";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -7,7 +6,23 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    plugins: [monacoEditorPlugin()],
+    build: {
+      rolldownOptions: {
+        output: {
+          strictExecutionOrder: true,
+          codeSplitting: {
+            groups: [
+              {
+                name: "monaco",
+                test: /node_modules\/monaco-editor\//,
+                // Rolldown measures this size before minification.
+                maxSize: 1_000_000,
+              },
+            ],
+          },
+        },
+      },
+    },
     server: {
       ...(env.VITE_DEBUG === "true" && {
         proxy: {
