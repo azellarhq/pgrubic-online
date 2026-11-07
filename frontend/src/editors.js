@@ -1,7 +1,15 @@
 // Editors
 
-import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-import "monaco-editor/esm/vs/basic-languages/sql/sql.contribution";
+import { editor } from "monaco-editor/editor";
+import "monaco-editor/languages/definitions/sql/register";
+import EditorWorker from "monaco-editor/editor/editor.worker?worker";
+
+// Initialise Monaco's editor worker.
+self.MonacoEnvironment = {
+  getWorker() {
+    return new EditorWorker();
+  },
+};
 
 const defaultSql = "CREATE TABLE users (id INT, name TEXT);";
 
