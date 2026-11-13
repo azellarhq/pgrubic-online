@@ -10,16 +10,16 @@ requires-python = ">=3.12"
 dependencies = [
   "pgrubic==4.1.0",
   "toml==0.10.2",
-  "pydantic==2.14.1",
-  "pydantic-settings==2.16.2",
+  "pydantic==2.14.3",
+  "pydantic-settings==2.16.3",
   "uvicorn==0.54.0",
-  "fastapi==0.162.0",
+  "fastapi==0.162.7",
   "diskcache==5.6.3"
 ]
 
 [project.optional-dependencies]
 dev = [
-  "ruff==0.17.3",
+  "ruff==0.17.5",
   "mypy==2.4.1",
   "isort==9.0.2",
   "bandit==1.9.4",
@@ -30,16 +30,16 @@ dev = [
   "yamllint==1.38.0",
   "conventional-pre-commit==4.5.0",
   "pytest==9.2.0",
-  "coverage==7.17.2",
+  "coverage==7.17.3",
   "httpx2==2.16.0",
   "types-toml==0.10.8.20260518",
 ]
 
 [dependency-groups]
 tooling = [
-  "uv==0.13.7",
-  "tox==4.67.11",
-  "tox-uv-bare==1.37.5",
+  "uv==0.13.8",
+  "tox==4.67.13",
+  "tox-uv-bare==1.37.7",
 ]
 
 [tool.bandit]
