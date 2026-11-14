@@ -18,7 +18,7 @@ COPY index.html vite.config.js ./
 
 RUN npm run build
 
-FROM nginx/nginx-unprivileged:stable-alpine@sha256:44e74ca483234093081138b6d7b6f561d55557756a2deefc3a5056148defeb99 AS runtime
+FROM nginx/nginx-unprivileged:stable-alpine@sha256:6b0610b60dff09248d642643a29393543a92eb355b00bbd1d12c7af562ef94c4 AS runtime
 
 COPY config/nginx/default.conf.template  /etc/nginx/templates/default.conf.template
 
